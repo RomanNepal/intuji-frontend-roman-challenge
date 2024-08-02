@@ -1,86 +1,59 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tab from "../ui/elements/Tab";
+import { fetcher } from "@/helpers/fetchHelper";
+import useSWR from "swr";
+import { getMemberUsers, getTeamUsers, getUserData } from "@/utils/data";
+import ListCard from "../ui/elements/Cards/ListCard";
+import CardSkeleton from "../ui/elements/Skeletons/CardSkeleton";
 
 const ContactList = () => {
-  const allContactList = [
-    {
-      name: "21 Industries",
-      image_url: "",
-      status: "offline",
-      last_active: "2024-01-19 03:14:07.499999",
-      category: "team",
-    },
-    {
-      name: "Darcy Patterson",
-      image_url: "",
-      status: "online",
-      last_active: "2038-01-19 03:14:07.499999",
-      category: "member",
-    },
-    {
-      name: "Alex Hamilton",
-      image_url: "",
-      status: "away",
-      last_active: "2038-01-19 03:14:07.499999",
-      category: "member",
-    },
-  ];
-  const teamContactList = [
-    {
-      name: "21 Industries",
-      image_url: "",
-      status: "offline",
-      last_active: "2024-01-19 03:14:07.499999",
-      category: "team",
-    },
-    {
-      name: "Darcy Patterson",
-      image_url: "",
-      status: "online",
-      last_active: "2038-01-19 03:14:07.499999",
-      category: "member",
-    },
-    {
-      name: "Alex Hamilton",
-      image_url: "",
-      status: "away",
-      last_active: "2038-01-19 03:14:07.499999",
-      category: "member",
-    },
-  ];
-  const membersContactList = [
-    {
-      name: "21 Industries",
-      image_url: "",
-      status: "offline",
-      last_active: "2024-01-19 03:14:07.499999",
-      category: "team",
-    },
-    {
-      name: "Darcy Patterson",
-      image_url: "",
-      status: "online",
-      last_active: "2038-01-19 03:14:07.499999",
-      category: "member",
-    },
-    {
-      name: "Alex Hamilton",
-      image_url: "",
-      status: "away",
-      last_active: "2038-01-19 03:14:07.499999",
-      category: "member",
-    },
-  ];
-
   let initialTabs = [
     { name: "All", href: "#", current: true, count: 24, data: [{}] },
     { name: "Teams", href: "#", current: false, count: 12 },
     { name: "Members", href: "#", current: false, count: 16 },
   ];
+  const [users, setUsers] = useState<Record<string, any>[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Record<string, any> | null>(null);
+  const [selectedMember, setSelectedMember] = useState<number>(-1);
   const [tabs, setTabs] = useState(initialTabs);
 
-  const handleTabClick = (tab: Record<string, any>) => {
+  const toggleSelectedMember = (id: number) => {
+    if (selectedMember === id) {
+      setSelectedMember(-1);
+    } else {
+      setSelectedMember(id);
+    }
+  };
+
+  const { data: userData, isLoading } = useSWR(
+    "/api/users?category=all",
+    fetcher
+  );
+
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
+
+  useEffect(() => {
+    setUsers(userData);
+  }, [userData]);
+
+  const handleTabClick = async (tab: Record<string, any>) => {
+    setLoading(true);
+    setSelectedMember(-1);
+    if (tab.name === "Teams") {
+      const users = await getTeamUsers();
+      setUsers(users);
+    } else if (tab.name === "Members") {
+      const users = await getMemberUsers();
+      setUsers(users);
+    } else {
+      const users = await getUserData();
+      setUsers(users);
+    }
+
     const updatedTabs = tabs.map((t) => {
       if (t.name === tab.name) {
         return { ...t, current: true };
@@ -89,10 +62,15 @@ const ContactList = () => {
       }
     });
     setTabs(updatedTabs);
+    setLoading(false);
   };
+
   return (
     <section>
-      <div className="rounded-xl bg-white py-4" style={{ width: "30rem" }}>
+      <div
+        className="rounded-xl bg-white py-4 transition-all"
+        style={{ width: "30rem" }}
+      >
         <div className="relative w-full px-12">
           <input
             type="text"
@@ -101,7 +79,6 @@ const ContactList = () => {
             // onChange={handleChange}
             className="w-full py-2 pl-10 pr-8 text-gray-700 bg-white focus:outline-none"
           />
-
           <div className="absolute inset-y-0 left-0 flex items-center pl-8 pointer-events-none">
             <svg
               className="w-5 h-5 text-gray-400"
@@ -143,6 +120,30 @@ const ContactList = () => {
           handleTabClick={(tab) => handleTabClick(tab)}
           className="px-8 border-y mt-2"
         />
+        <div className="mt-4">
+          {loading ? (
+            <CardSkeleton />
+          ) : (
+            users?.length > 0 &&
+            users.map((user) => (
+              <ListCard
+                key={user.id}
+                name={user.name}
+                status={user.status}
+                last_active={user.last_active}
+                image_url={user.image_url}
+                category={user.category}
+                selected={selectedMember === user.id}
+                onClick={() => {
+                  if (user.category === "member") toggleSelectedMember(user.id);
+                }}
+              />
+            ))
+          )}
+          {!loading && !users && (
+            <div className="text-center py-4 px-8">No users found</div>
+          )}
+        </div>
       </div>
     </section>
   );

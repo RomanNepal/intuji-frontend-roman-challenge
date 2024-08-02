@@ -5,7 +5,7 @@ import React, { useState } from "react";
 interface TabProps {
   tabs: Record<string, any>[];
   className?: string;
-  handleTabClick?: (tab: Record<string, any>) => void;
+  handleTabClick: (tab: Record<string, any>) => void;
   // options: { label: string; value: string | number }[];
 }
 
@@ -13,7 +13,6 @@ const Tab: React.FC<TabProps> = ({ tabs, className, handleTabClick }) => {
   // const [selectedValue, setSelectedValue] = useState("");
   // const router = useRouter();
   // const pathname = usePathname();
-
   return (
     <div className={`overflow-x-auto overflow-y-hidden ${className}`}>
       <div>
