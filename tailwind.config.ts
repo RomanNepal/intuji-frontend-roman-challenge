@@ -12,7 +12,8 @@ const config: Config = {
         primary: "#3F9BFC",
         success: "#12B76A",
         warning: "#FAC301",
-        selected: "#F4F8FB"
+        info: "#9CA3AF",
+        selected: "#F4F8FB",
       },
     }
   },
