@@ -1,7 +1,8 @@
 # Intuji Frontend Challenge
 
-Used firebase as database, deployed on vercel. 
-- Link: [text](https://intuji-frontend-roman-challenge.vercel.app/)
+Used firebase as database, deployed on vercel.
+
+- Link: [https://intuji-frontend-roman-challenge.vercel.app/](https://intuji-frontend-roman-challenge.vercel.app/)
 
 ## Table of Contents
 
