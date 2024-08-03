@@ -24,9 +24,9 @@ const ListCard: React.FC<ListCardProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`py-4 px-8 flex justify-between items-center ${
+      className={`py-4 px-4 md:px-8 flex justify-between items-center hover:bg-gray-100 transition-all ${
         category === "member" ? " cursor-pointer " : ""
-      } ${selected ? " bg-gray-100" : ""}`}
+      } ${selected ? " bg-gray-200 hover:bg-gray-200" : ""}`}
     >
       <div className="w-1/2 flex items-center gap-4">
         <div className="relative w-12 h-12">
@@ -39,11 +39,11 @@ const ListCard: React.FC<ListCardProps> = ({
           ></span>
         </div>
         <div>
-          <h3 className="font-semibold">{name}</h3>
+          <h3 className="font-semibold text-sm">{name}</h3>
           <p className="text-gray-500">{timeString}</p>
         </div>
       </div>
-      <div className="w-1/2 text-right">
+      <div className="w-1/2 text-right text-gray-500">
         {category.charAt(0).toUpperCase() + category.slice(1)}
       </div>
     </div>
