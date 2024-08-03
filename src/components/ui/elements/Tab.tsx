@@ -1,26 +1,14 @@
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 
 interface TabProps {
   tabs: Record<string, any>[];
   className?: string;
   handleTabClick: (tab: Record<string, any>) => void;
-  // options: { label: string; value: string | number }[];
 }
 
 const Tab: React.FC<TabProps> = ({ tabs, className, handleTabClick }) => {
-  // const [selectedValue, setSelectedValue] = useState("");
-  // const router = useRouter();
-  // const pathname = usePathname();
   return (
     <div className={`overflow-x-auto overflow-y-hidden ${className}`}>
-      <div>
-        {/* <label htmlFor="tabs" className="sr-only">
-          Select a tab
-        </label> */}
-      </div>
-
       <div className="block">
         <div className=" border-gray-200">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">

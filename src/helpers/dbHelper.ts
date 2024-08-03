@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { getDatabase, query, orderByChild, equalTo, get, ref, set } from 'firebase/database';
+import { query, orderByChild, equalTo, get, ref, set } from 'firebase/database';
 
 const allContactList = [
     {
@@ -44,6 +44,7 @@ const allContactList = [
     },
 ];
 
+//this function is run only for uploading static data above
 export const uploadData = async () => {
     try {
         const dataRef = ref(db, 'users');
